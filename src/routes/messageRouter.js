@@ -3,6 +3,7 @@ import {getChat} from '../controllers/messageController.js'
 
 
 const router = express.Router();
+
 router
 .route('users/:senderId/getAllChatHistory')
 .get(getChat.allChat);
@@ -13,3 +14,4 @@ router
 
 
 
+export default router;

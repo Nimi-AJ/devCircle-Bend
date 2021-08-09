@@ -8,13 +8,14 @@ dotenv.config();
 export const pool = new Pool();
 
 
-const getChat = {
+export const getChat = {
     allChat: async(req, res) => {
         //query all chats for user
+        return "blank"
     },
 
     currentChat: async(req, res) => {
-        
+        return "blank"
     }
 }
 

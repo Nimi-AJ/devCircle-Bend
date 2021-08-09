@@ -10,7 +10,7 @@ export const userJoin = (socketId, userName, userId) => {
 
 export const userLeave = (userId) => {
     if(users.has(userId)){
-        let item = users.get(id)
+        let item = users.get(userId)
         users.delete(userId);
         return item;
     }

@@ -1,5 +1,5 @@
-const users = new Map();
-
+export const users = new Map();
+console.log(users);
 //save user socket ID and name
 export const userJoin = (socketId, userName, userId) => {
     let item = [socketId, userName];

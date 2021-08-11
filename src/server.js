@@ -8,6 +8,7 @@ import {Server} from 'socket.io';
 import http from 'http';
 import {userJoin, userLeave} from './utils/users.js';
 import pkg from 'pg';
+import { users } from './utils/users.js';
 
 export const app = express();
 
@@ -34,16 +35,18 @@ const io = new Server(server, {
     }
 });
 const port = process.env.PORT || 6000;
-
+let count = 0
 
 io.on("connection", (socket) =>{
     console.log("New user connected");
-    const blankPayLoad = 'blankPayLoad'; 
-    io.emit("connected", blankPayLoad) //To signal to front end client that user has connection
+    console.log(count++);
+    const blankPayLoad = {message: 'blankPayLoad'}; 
+    // socket.emit("connected", blankPayLoad) //To signal to front end client that user has connection
     //save user and socket id
     socket.on("openChat", ({userName, userId}) => {
         console.log('open chat');
         userJoin(socket.id, userName, userId);
+        console.log(users);
     })
 
     socket.on("sendMessage", (data) => {
@@ -61,9 +64,16 @@ io.on("connection", (socket) =>{
     })
 
     socket.on("disconnect", (userId) => {
-        // console.log('disconnected');
+        console.log('disconnected');
         userLeave(userId)
+        console.log(users);
     })
+
+    if(count === 1){
+        setTimeout(() => {
+            socket.emit("newMessage", blankPayLoad)
+        }, 3000)
+    }
     
 })
 

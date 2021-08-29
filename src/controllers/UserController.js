@@ -33,6 +33,7 @@ const UserController = {
 
     getUserById: async (req, res) => {
         const {userId} = req.params;
+        
         try{
             const user = await User.findById(userId).lean().exec();
             return res.status(201).json({status: 'success', message: 'successful', data: user})

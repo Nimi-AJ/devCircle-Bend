@@ -2,23 +2,15 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../models/UserModel.js';
-import pkg from 'pg';
-
-
-const {Pool} = pkg;
-
-export const pool = new Pool();
-
 
 
 dotenv.config();
 
-export const loggedInUser = (id) => {
-    return id;
-}
+
 
 const AuthController = {
     signUp: async (req, res) => {
+        console.log("entered block")
         try {
         
             const { firstName, lastName, email, password, github, gender } = req.body; 
@@ -27,6 +19,7 @@ const AuthController = {
             if( !firstName || !lastName || !email || !password || !github || !gender) {
                 return res.status(400).json({status: 'fail', message: "Please fill all fields"})
             }
+           
         
 
             // Check if the email already exists
@@ -36,16 +29,20 @@ const AuthController = {
             if(emailExists) {
                 return res.status(400).json({status: 'fail', message: "User already exist"});
             }
+            
 
 
             //password hash 
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
+             
+            
 
             if(hashedPassword){
                 const newUser = new User({ firstName, lastName, email, password: hashedPassword, github, gender })
                 const savedUser = await newUser.save();
-                
+            
+                console.log("4")
                 if(savedUser) {
                     jwt.sign({id:savedUser._id}, process.env.JWT_SECRET, {expiresIn: 3600}, (err, token) => {
                         if(err) {
@@ -96,7 +93,6 @@ const AuthController = {
                 return res.status(400).json({status: 'fail', message: "email or password is incorrect"});
             }
             
-            loggedInUser(isUser._id);
             jwt.sign({id: isUser._id}, process.env.JWT_SECRET,{expiresIn: 86400}, (err, token) => {
                     
                 if(err) {
